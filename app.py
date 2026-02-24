@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 @app.route('/ivr', methods=['GET', 'POST'])
 def ivr():
-    entry = request.values.get('ApiEnter', '').strip()
+    entry = request.values.get('id_num', '').strip()
     hangup = request.values.get('hangup', '')
     call_id = request.values.get('callId', '')
 
@@ -14,27 +14,18 @@ def ivr():
 
     if entry == '':
         return yemot_response(
-            'read_input=1\n'
-            'read_timeout=10\n'
-            'read_max=9\n'
-            'read_min=9\n'
-            'speak_text=Please enter your 9 digit ID and press star'
+            'read=id_num,;t Please enter your 9 digit ID and press star,9,9,10'
         )
 
     if not entry.isdigit() or len(entry) != 9:
         return yemot_response(
-            'read_input=1\n'
-            'read_timeout=10\n'
-            'read_max=9\n'
-            'read_min=9\n'
-            'speak_text=Invalid ID, please try again'
+            'read=id_num,;t Invalid ID number please try again,9,9,10'
         )
 
     print(f"Call {call_id} - ID: {entry}")
     digits_spaced = ' '.join(entry)
     return yemot_response(
-        f'speak_text=Thank you. ID {digits_spaced} received\n'
-        'hangup=1'
+        f'speak_text=Thank you. ID {digits_spaced} received\nhangup=1'
     )
 
 
