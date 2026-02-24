@@ -14,14 +14,13 @@ def ivr():
     # ---- שלב 0: בקשת מספר זהות ----
     if step == '0' or entry == '':
         return yemot_response(
-            f"id_list_message=welcome\n"
-            f"speak_text=שלום, אנא הזן מספר זהות בן 9 ספרות ולחץ כוכבית\n"
-            f"read_input=1\n"
-            f"max_digit=9\n"
-            f"min_digit=9\n"
-            f"block_asterisk=0\n"
-            f"tap_timeout=10\n"
-            f"go_to_page=ivr?step=1"
+            "speak_text=שלום, אנא הזן מספר זהות בן 9 ספרות ולחץ כוכבית\n"
+            "read_input=1\n"
+            "max_digit=9\n"
+            "min_digit=9\n"
+            "block_asterisk=0\n"
+            "tap_timeout=10\n"
+            "go_to_page=ivr?step=1"
         )
 
     # ---- שלב 1: קיבלנו קלט - ניקח מ-ApiEnter ----
@@ -31,25 +30,22 @@ def ivr():
         # ולידציה: 9 ספרות בדיוק
         if not id_number.isdigit() or len(id_number) != 9:
             return yemot_response(
-                f"id_list_message=error\n"
-                f"speak_text=מספר הזהות שהזנת אינו תקין. אנא נסה שנית\n"
-                f"read_input=1\n"
-                f"max_digit=9\n"
-                f"min_digit=9\n"
-                f"block_asterisk=0\n"
-                f"tap_timeout=10\n"
-                f"go_to_page=ivr?step=1"
+                "speak_text=מספר הזהות שהזנת אינו תקין. אנא נסה שנית\n"
+                "read_input=1\n"
+                "max_digit=9\n"
+                "min_digit=9\n"
+                "block_asterisk=0\n"
+                "tap_timeout=10\n"
+                "go_to_page=ivr?step=1"
             )
 
         # ---- כאן תוסיף לוגיקה עסקית לפי הצורך ----
-        # לדוגמה: שמירה ל-DB, בדיקה מול מערכת חיצונית וכו'
         print(f"[CALL {call_id}] קיבלנו ת.ז: {id_number}")
 
         # אישור למתקשר
         return yemot_response(
-            f"id_list_message=confirm\n"
             f"speak_text=תודה. מספר הזהות {' '.join(id_number)} התקבל בהצלחה\n"
-            f"hangup=1"
+            "hangup=1"
         )
 
     # fallback
@@ -74,3 +70,4 @@ def health():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
+קודים למימשוק עם ימות המשיח - Claude
