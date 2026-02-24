@@ -1,68 +1,51 @@
-from flask import Flask, request
+from flask import Flask, request, Response
 
 app = Flask(__name__)
 
-# -------------------------
-# Webhook ראשי - ימות קוראת לכאן
-# -------------------------
 @app.route('/ivr', methods=['GET', 'POST'])
 def ivr():
-    call_id  = request.values.get('callId', '')
-    entry    = request.values.get('ApiEnter', '')   # מה המתקשר הקיש
-    step     = request.values.get('step', '0')       # שלב בשיחה (אנחנו שולחים את זה בעצמנו)
+    call_id = request.values.get('callId', '')
+    entry   = request.values.get('ApiEnter', '').strip()
+    hangup  = request.values.get('hangup', '')
 
-    # ---- שלב 0: בקשת מספר זהות ----
-    if step == '0' or entry == '':
+    # ימות שולחת hangup=yes בסוף שיחה – לא צריך לעשות כלום
+    if hangup == 'yes':
+        return yemot_response('hangup=1')
+
+    # אם עוד לא הוזן כלום – בקש מספר זהות
+    if entry == '':
         return yemot_response(
             "speak_text=שלום, אנא הזן מספר זהות בן 9 ספרות ולחץ כוכבית\n"
             "read_input=1\n"
             "max_digit=9\n"
             "min_digit=9\n"
-            "block_asterisk=0\n"
-            "tap_timeout=10\n"
-            "go_to_page=ivr?step=1"
+            "tap_timeout=10"
         )
 
-    # ---- שלב 1: קיבלנו קלט - ניקח מ-ApiEnter ----
-    if step == '1':
-        id_number = entry.strip()
-
-        # ולידציה: 9 ספרות בדיוק
-        if not id_number.isdigit() or len(id_number) != 9:
-            return yemot_response(
-                "speak_text=מספר הזהות שהזנת אינו תקין. אנא נסה שנית\n"
-                "read_input=1\n"
-                "max_digit=9\n"
-                "min_digit=9\n"
-                "block_asterisk=0\n"
-                "tap_timeout=10\n"
-                "go_to_page=ivr?step=1"
-            )
-
-        # ---- כאן תוסיף לוגיקה עסקית לפי הצורך ----
-        print(f"[CALL {call_id}] קיבלנו ת.ז: {id_number}")
-
-        # אישור למתקשר
+    # הוזן משהו – בדוק ולידציה
+    if not entry.isdigit() or len(entry) != 9:
         return yemot_response(
-            f"speak_text=תודה. מספר הזהות {' '.join(id_number)} התקבל בהצלחה\n"
-            "hangup=1"
+            "speak_text=מספר הזהות שהזנת אינו תקין. אנא נסה שנית\n"
+            "read_input=1\n"
+            "max_digit=9\n"
+            "min_digit=9\n"
+            "tap_timeout=10"
         )
 
-    # fallback
-    return yemot_response("hangup=1")
+    # ת.ז תקינה!
+    print(f"[CALL {call_id}] קיבלנו ת.ז: {entry}")
+
+    digits_spaced = ' '.join(entry)
+    return yemot_response(
+        f"speak_text=תודה. מספר הזהות {digits_spaced} התקבל בהצלחה\n"
+        "hangup=1"
+    )
 
 
-# -------------------------
-# פונקציית עזר - מחזירה טקסט עם header נכון
-# -------------------------
 def yemot_response(text: str):
-    from flask import Response
     return Response(text.strip(), content_type='text/plain; charset=utf-8')
 
 
-# -------------------------
-# Health check - Railway/Render דורשים זאת
-# -------------------------
 @app.route('/', methods=['GET'])
 def health():
     return "OK", 200
