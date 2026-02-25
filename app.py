@@ -26,7 +26,7 @@ def ivr():
     digits_spaced = '>'.join(id_num)
     return yemot_response(
         f'id_list_message=t-תודה>מספר הזהות>{digits_spaced}>התקבל בהצלחה\n'
-        'go_to_folder=/ivr2'
+        'go_to_folder=ivr2:/'
     )
 
 
