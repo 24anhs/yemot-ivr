@@ -14,18 +14,19 @@ def ivr():
 
     if id_num == '':
         return yemot_response(
-            'read=t-Please enter your 9 digit ID and press star=id_num,,9,9,Digits'
+            'read=t-שלום, אנא הזן מספר זהות בן 9 ספרות=id_num,,9,9,Digits'
         )
 
     if not id_num.isdigit() or len(id_num) != 9:
         return yemot_response(
-            'read=t-Invalid ID number please try again=id_num,,9,9,Digits'
+            'read=t-מספר הזהות שהזנת אינו תקין, אנא נסה שנית=id_num,,9,9,Digits'
         )
 
     print(f"Call {call_id} - ID: {id_num}")
     digits_spaced = ' '.join(id_num)
     return yemot_response(
-        f'id_list_message=t-Thank you. ID {digits_spaced} received\nhangup=1'
+        f'id_list_message=t-תודה, מספר הזהות {digits_spaced} התקבל בהצלחה\n'
+        'go_to_folder=ivr2:/'
     )
 
 
