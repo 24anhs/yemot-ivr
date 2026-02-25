@@ -14,12 +14,12 @@ def ivr():
 
     if id_num == '':
         return yemot_response(
-            'read=t-שלום> אנא הזן מספר זהות בן 9 ספרות^id_num>>9>9>Digits'
+            'read=t-שלום אנא הזן מספר זהות בן 9 ספרות\n^id_num>>9>9>Digits'
         )
 
     if not id_num.isdigit() or len(id_num) != 9:
         return yemot_response(
-            'read=t-מספר הזהות שהזנת אינו תקין> אנא נסה שנית^id_num>>9>9>Digits'
+            'read=t-מספר הזהות שהזנת אינו תקין> אנא נסה שנית\n^id_num>>9>9>Digits'
         )
 
     print(f"Call {call_id} - ID: {id_num}")
