@@ -3,7 +3,7 @@ from flask import Flask, request, Response
 app = Flask(__name__)
 
 
-@app.route('ivr:/', methods=['GET', 'POST'])
+@app.route('/ivr', methods=['GET', 'POST'])
 def ivr():
     hangup  = request.values.get('hangup', '')
     call_id = request.values.get('callId', '')
